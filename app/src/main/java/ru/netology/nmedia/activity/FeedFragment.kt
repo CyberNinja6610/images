@@ -8,9 +8,11 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import ru.netology.nmedia.R
+import ru.netology.nmedia.activity.AttachmentFragment.Companion.urlArg
 import ru.netology.nmedia.adapter.OnInteractionListener
 import ru.netology.nmedia.adapter.PostsAdapter
 import ru.netology.nmedia.databinding.FragmentFeedBinding
@@ -52,6 +54,16 @@ class FeedFragment : Fragment() {
                     Intent.createChooser(intent, getString(R.string.chooser_share_post))
                 startActivity(shareIntent)
             }
+
+            override fun onAttachmentImageOpen(url: String) {
+                findNavController()
+                    .navigate(
+                        R.id.action_feedFragment_to_attachmentImage,
+                        Bundle().apply {
+                            urlArg = url
+                        }
+                    )
+            }
         })
         binding.list.adapter = adapter
         viewModel.dataState.observe(viewLifecycleOwner) { state ->
@@ -75,6 +87,8 @@ class FeedFragment : Fragment() {
         binding.swiperefresh.setOnRefreshListener {
             viewModel.refreshPosts()
         }
+
+
 
         binding.fab.setOnClickListener {
             findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)

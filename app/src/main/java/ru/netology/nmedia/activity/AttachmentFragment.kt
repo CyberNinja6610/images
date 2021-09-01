@@ -26,7 +26,9 @@ class AttachmentFragment : Fragment() {
         setHasOptionsMenu(true)
         val activity = requireActivity()
         if (activity is AppActivity) {
-            activity.supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireActivity(),R.color.black)))
+            val statusBarColor = ContextCompat.getColor(requireActivity(),R.color.black)
+            activity.window.statusBarColor = statusBarColor
+            activity.supportActionBar?.setBackgroundDrawable(ColorDrawable(statusBarColor))
         }
     }
 
@@ -67,7 +69,9 @@ class AttachmentFragment : Fragment() {
         super.onDestroyView()
         val activity = requireActivity()
         if (activity is AppActivity) {
-            activity.supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireActivity(),R.color.colorPrimary)))
+            val statusBarColor = ContextCompat.getColor(requireActivity(),R.color.colorPrimaryDark)
+            activity.supportActionBar?.setBackgroundDrawable(ColorDrawable(statusBarColor))
+            activity.window.statusBarColor = statusBarColor
         }
     }
 }

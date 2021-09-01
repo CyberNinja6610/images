@@ -1,18 +1,14 @@
 package ru.netology.nmedia.adapter
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.netology.nmedia.BuildConfig
 import ru.netology.nmedia.R
-import ru.netology.nmedia.activity.AttachmentFragment.Companion.urlArg
-import ru.netology.nmedia.activity.NewPostFragment.Companion.textArg
 import ru.netology.nmedia.databinding.CardPostBinding
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.enumeration.AttachmentType
@@ -24,6 +20,7 @@ interface OnInteractionListener {
     fun onEdit(post: Post) {}
     fun onRemove(post: Post) {}
     fun onShare(post: Post) {}
+    fun onAttachmentImageOpen(url: String) {}
 }
 
 class PostsAdapter(
@@ -54,20 +51,14 @@ class PostViewHolder(
             like.isChecked = post.likedByMe
             like.text = "${post.likes}"
             attachmentImage.apply {
-                    if (post.attachment?.type == AttachmentType.IMAGE) {
-                        val url = "${BuildConfig.BASE_URL}/media/${post.attachment.url}"
-                        visibility = View.VISIBLE
-                        load(url)
-                        setOnClickListener{
-                            findNavController()
-                                .navigate(
-                                    R.id.action_feedFragment_to_attachmentImage,
-                                    Bundle().apply {
-                                        urlArg = url
-                                    }
-                                )
-                        }
+                if (post.attachment?.type == AttachmentType.IMAGE) {
+                    val url = "${BuildConfig.BASE_URL}/media/${post.attachment.url}"
+                    visibility = View.VISIBLE
+                    load(url)
+                    setOnClickListener {
+                        onInteractionListener.onAttachmentImageOpen(url)
                     }
+                }
             }
 
             menu.setOnClickListener {
